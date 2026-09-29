@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎩 Chaperone — K2S Factory</title>
+  <style>
+    :root { --bg:#f6f8fa; --card:#ffffff; --text:#1f2937; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--text); margin:0; padding:1rem; min-height:100vh; }
+    .container { max-width:720px; margin:0 auto; }
+    header { text-align:center; margin-bottom:1.5rem; }
+    nav { display:flex; justify-content:center; gap:1rem; margin-bottom:1rem; font-size:0.9rem; }
+    nav a { color:var(--accent); text-decoration:none; }
+    nav a:hover { text-decoration:underline; }
+    h1 { font-size:1.6rem; margin:0; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin:0.3rem 0 0; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:0.75rem; padding:1rem; margin-bottom:1rem; }
+    .card h2 { font-size:1.05rem; margin:0 0 0.6rem; color:var(--accent); }
+    .suggestion { font-size:1.1rem; background:#dbeafe; border-color:#93c5fd; }
+    .muted { color:var(--muted); font-size:0.85rem; }
+    .ok { color:#16a34a; } .ng { color:#dc2626; }
+    ul { margin:0.4rem 0 0; padding-left:1.2rem; font-size:0.9rem; }
+    .counts { display:flex; gap:1rem; flex-wrap:wrap; }
+    .count { background:#f3f4f6; padding:0.4rem 0.7rem; border-radius:0.4rem; font-size:0.85rem; }
+    footer { text-align:center; margin-top:1.5rem; font-size:0.8rem; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <nav>
+        <a href="index.html">🏠 index</a>
+        <a href="mission.html">🌟 mission</a>
+        <a href="process-map.html">🗺️ map</a>
+        <a href="flow-diagram.html">🕸️ flow</a>
+        <a href="kanban.html">🗂️ kanban</a>
+      </nav>
+      <h1>🎩 Chaperone</h1>
+      <p class="subtitle">パイプライン監視 &amp; 次アクション提案</p>
+    </header>
+
+    <main id="main"></main>
+
+    <footer>
+      <p>更新: <code>python3 chaperone.py</code></p>
+    </footer>
+  </div>
+
+  <script>
+    const STATUS = {"checked_at": "2026-09-29T04:53:48.533178+00:00", "lms": {"ok": true, "base_url": "http://localhost:1234/v1", "models": ["google/gemma-4-e4b", "text-embedding-nomic-embed-text-v1.5"], "latency_sec": 0.03}, "outputs": {"dir": "/home/bons/wiki-lms-output", "total": 6, "latest": ["dekita.html", "dekita.jsonl", "20260929_135339_poem-api.txt", "20260929_135148_sf-story.txt", "20260929_134823_poem.txt"]}, "kanban": {"counts": {"backlog": 3, "todo": 4, "doing": 1, "done": 3}, "doing": [{"id": "c08", "title": "創作品の最初の小バッチを生成・品質レビュー", "column": "doing", "tags": ["creative", "quality"], "note": "tag/seed プロンプトの改善が必要"}], "todo": [{"id": "c01", "title": "LMS パイプラインの Camel pollination をオプション化", "column": "todo", "tags": ["pipeline", "config", "cost"], "note": "seed 数制限 + フラグでタイムアウト回避"}, {"id": "c02", "title": "優先ディレクトリだけを ingest する", "column": "todo", "tags": ["pipeline", "ingest"], "note": "creative/, journal/, projects/, agents/, ontology/ のみ。raw/ personal/ は除外"}, {"id": "c03", "title": "bqmlite 特徴量化と bqmlite_input.json 生成", "column": "todo", "tags": ["bqmlite", "features"], "issue": "https://github.com/bonsai/bqmlite/issues/12"}]}, "suggestion": "進行中: 創作品の最初の小バッチを生成・品質レビュー"};
+
+    function fmtList(items) {
+      if (!items || items.length === 0) return '<p class="muted">なし</p>';
+      return '<ul>' + items.map(x => '<li>' + escapeHtml(x) + '</li>').join('') + '</ul>';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    const main = document.getElementById('main');
+    const lms = STATUS.lms;
+    const lmsIcon = lms.ok ? '✅' : '❌';
+    const lmsClass = lms.ok ? 'ok' : 'ng';
+    const doing = STATUS.kanban.doing.map(c => c.title);
+    const todo = STATUS.kanban.todo.map(c => c.title);
+
+    main.innerHTML = `
+      <section class="card suggestion">
+        <h2>💡 次のアクション</h2>
+        <p>${escapeHtml(STATUS.suggestion)}</p>
+      </section>
+
+      <section class="card">
+        <h2>${lmsIcon} LMS 状態</h2>
+        <p class="muted">${escapeHtml(lms.base_url)}</p>
+        <p class="${lmsClass}">latency: ${lms.latency_sec !== undefined ? lms.latency_sec + 's' : escapeHtml(lms.error)}</p>
+        ${fmtList(lms.models || [])}
+      </section>
+
+      <section class="card">
+        <h2>🎁 出力ファイル</h2>
+        <p class="muted">${escapeHtml(STATUS.outputs.dir)} / total ${STATUS.outputs.total}</p>
+        ${fmtList(STATUS.outputs.latest)}
+      </section>
+
+      <section class="card">
+        <h2>🗂️ Kanban カウント</h2>
+        <div class="counts">
+          ${Object.entries(STATUS.kanban.counts).map(([k,v]) => `<span class="count">${k}: ${v}</span>`).join('')}
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>📋 進行中 / To Do Top3</h2>
+        <p class="muted">進行中</p>${fmtList(doing)}
+        <p class="muted">To Do</p>${fmtList(todo)}
+      </section>
+
+      <section class="card">
+        <h2>🕒 確認時刻</h2>
+        <p class="muted">${escapeHtml(STATUS.checked_at)}</p>
+      </section>
+    `;
+  </script>
+</body>
+</html>

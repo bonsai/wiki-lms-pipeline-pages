@@ -1,0 +1,54 @@
+flowchart LR
+  subgraph wiki["🌿 bonsai/wiki"]
+    wiki_maintain["セカンドブレインを育てる<br/>human / agent / 観察・記録・待つ · 知見・日誌・アイデア"]
+    wiki_snapshot["snapshot を取得<br/>pipeline agent / tarball 展開 · repo contents"]
+  end
+  subgraph pipeline["🏭 wiki-lms-pipeline"]
+    pipeline_ingest["ingest<br/>pipeline / 読み込む · md/txt/html files"]
+    pipeline_embed["embed<br/>pipeline / ベクトル化する · chunks"]
+    pipeline_tag["tag<br/>gemma-4-e4b / 分類する · file"]
+    pipeline_seed["seed pick<br/>pipeline / 採取する · interesting chunks"]
+    pipeline_pollinate["pollinate<br/>Camel Idea ↔ Critic / 交叉・批評する · seeds"]
+    pipeline_write["genre write<br/>gemma-4-e4b / 創作する · pollinated idea"]
+    pipeline_quality["quality gate<br/>gemma-4-e4b / 採点・再生成する · draft"]
+    pipeline_jev["jev classify<br/>jev / 振り分ける · output"]
+    pipeline_export_bqmlite["export bqmlite<br/>pipeline / 特徴量化する · reviewed drafts"]
+    pipeline_publish["publish<br/>pipeline / 書き出す · good drafts"]
+    pipeline_notify["notify<br/>pipeline / 通知する · report"]
+  end
+  subgraph wiki-weave-skill["🧶 bonsai/wiki-weave-skill"]
+    wiki-weave-skill_weave["wiki を編む<br/>opencode/pi skill / 編む · wiki chunks"]
+  end
+  subgraph t2t["🧬 bonsai/t2t"]
+    t2t_reproduce["t2t reproduce<br/>parent texts / 出産・交叉する · DNA at interface"]
+  end
+  subgraph r2r["🔀 bonsai/r2r"]
+    r2r_broker["r2r broker<br/>repo agent / 発見・依頼・返す · capability / request"]
+  end
+  subgraph bqmlite["📊 bonsai/bqmlite"]
+    bqmlite_regress["linear regression<br/>bqmlite / 回帰する · numeric features"]
+    bqmlite_sakura_embed["Sakura embed<br/>Sakura API / ベクトル化する · text"]
+    bqmlite_bq_export["home BQ export<br/>pipeline / 出力する · features"]
+  end
+  subgraph output["🎁 outputs"]
+    output_creative["creative works<br/>genre writer / 生成する · idea"]
+    output_quiz["review quiz<br/>agent / 出題する · knowledge chunks"]
+  end
+  wiki_maintain -->|"日々更新"| wiki_snapshot
+  wiki_snapshot -->|"tarball"| pipeline_ingest
+  pipeline_ingest -->|"chunks"| pipeline_embed
+  pipeline_embed -->|"vectors"| pipeline_tag
+  pipeline_tag -->|"tags"| pipeline_seed
+  pipeline_seed -->|"seeds"| pipeline_pollinate
+  pipeline_pollinate -->|"hybrid ideas"| pipeline_write
+  pipeline_write -->|"drafts"| pipeline_quality
+  pipeline_quality -->|"&gt;=3.5"| pipeline_jev
+  pipeline_jev -->|"分類済み"| pipeline_publish
+  pipeline_jev -->|"features"| pipeline_export_bqmlite
+  pipeline_export_bqmlite -->|"json"| bqmlite_regress
+  bqmlite_sakura_embed -.->|"2560d vec"| bqmlite_regress
+  pipeline_publish -->|"files"| output_creative
+  pipeline_publish -->|"report"| pipeline_notify
+  wiki-weave-skill_weave -->|"skill経由"| pipeline_seed
+  t2t_reproduce -.->|"交配ルール"| pipeline_pollinate
+  r2r_broker -.->|"委託タスク"| pipeline_write

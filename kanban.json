@@ -1,0 +1,84 @@
+{
+  "columns": [
+    { "id": "backlog", "name": "Backlog", "emoji": "🧊" },
+    { "id": "todo", "name": "To Do", "emoji": "📋" },
+    { "id": "doing", "name": "In Progress", "emoji": "🚧" },
+    { "id": "done", "name": "Done", "emoji": "✅" }
+  ],
+  "cards": [
+    {
+      "id": "c01",
+      "title": "LMS パイプラインの Camel pollination をオプション化",
+      "column": "todo",
+      "tags": ["pipeline", "config", "cost"],
+      "note": "seed 数制限 + フラグでタイムアウト回避"
+    },
+    {
+      "id": "c02",
+      "title": "優先ディレクトリだけを ingest する",
+      "column": "todo",
+      "tags": ["pipeline", "ingest"],
+      "note": "creative/, journal/, projects/, agents/, ontology/ のみ。raw/ personal/ は除外"
+    },
+    {
+      "id": "c03",
+      "title": "bqmlite 特徴量化と bqmlite_input.json 生成",
+      "column": "todo",
+      "tags": ["bqmlite", "features"],
+      "issue": "https://github.com/bonsai/bqmlite/issues/12"
+    },
+    {
+      "id": "c04",
+      "title": "メール通知の SMTP 設定を確定",
+      "column": "todo",
+      "tags": ["notify", "smtp"],
+      "note": "設定がなければ .eml フォールバックのまま"
+    },
+    {
+      "id": "c05",
+      "title": "Sakura embeddings / home BigQuery 統合",
+      "column": "backlog",
+      "tags": ["bqmlite", "sakura", "bigquery"],
+      "issue": "https://github.com/bonsai/bqmlite/issues/12"
+    },
+    {
+      "id": "c06",
+      "title": "t2t text-to-text 遺伝的出産プロトコル",
+      "column": "backlog",
+      "tags": ["t2t", "protocol", "weave"],
+      "issue": "https://github.com/bonsai/t2t/issues/1"
+    },
+    {
+      "id": "c07",
+      "title": "r2r repo-to-repo プロトコル",
+      "column": "backlog",
+      "tags": ["r2r", "protocol", "weave"],
+      "issue": "https://github.com/bonsai/r2r/issues/1"
+    },
+    {
+      "id": "c08",
+      "title": "創作品の最初の小バッチを生成・品質レビュー",
+      "column": "doing",
+      "tags": ["creative", "quality"],
+      "note": "tag/seed プロンプトの改善が必要"
+    },
+    {
+      "id": "c09",
+      "title": "process-map.html / flow-diagram.html / index.html 作成",
+      "column": "done",
+      "tags": ["docs", "ui"]
+    },
+    {
+      "id": "c10",
+      "title": "LMS + Sakura API 接続テスト",
+      "column": "done",
+      "tags": ["lms", "sakura", "test"]
+    },
+    {
+      "id": "c11",
+      "title": "Mermaid 構文エラーの修正",
+      "column": "done",
+      "tags": ["docs", "mermaid"]
+    }
+  ]
+}

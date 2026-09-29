@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏭 K2S Factory Docs</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header { text-align: center; padding: 2rem 0; }
+    h1 { font-size: 2rem; margin: 0; }
+    .subtitle { color: var(--muted); margin-top: 0.5rem; }
+    .grid { display: grid; gap: 1rem; }
+    .card {
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .card h2 { font-size: 1.2rem; margin: 0 0 0.4rem; color: var(--accent); }
+    .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    footer { text-align: center; margin-top: 2rem; font-size: 0.8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏭 K2S Factory</h1>
+      <p class="subtitle">bonsai/wiki → LMS 創作・分析パイプラインのドキュメント</p>
+    </header>
+    <main class="grid">
+      <a class="card" href="mission.html">
+        <h2>🌟 Mission</h2>
+        <p>なぜやるのか、3本柱（知識の土壌 / 創作・分析 / 連携）の概要。</p>
+      </a>
+      <a class="card" href="process-map.html">
+        <h2>🗺️ Process Map</h2>
+        <p>リポジトリ・プロセス・担当者をカードで可視化。</p>
+      </a>
+      <a class="card" href="flow-diagram.html">
+        <h2>🕸️ Flow Diagram</h2>
+        <p>フローダイアグラムのみを大きく表示したページ。</p>
+      </a>
+      <a class="card" href="kanban.html">
+        <h2>🗂️ Kanban</h2>
+        <p>タスクボード。kanban.json を編集すれば状態を更新。</p>
+      </a>
+      <a class="card" href="chaperone.html">
+        <h2>🎩 Chaperone</h2>
+        <p>パイプライン監視ダッシュボード。`python3 chaperone.py` で更新。</p>
+      </a>
+      <a class="card" href="recap.html">
+        <h2>📝 Recap</h2>
+        <p>現状サマリー。`python3 generate_recap.py` で更新。</p>
+      </a>
+      <a class="card" href="http://127.0.0.1:8000/docs" target="_blank">
+        <h2>🚀 API</h2>
+        <p>FastAPI サーバー。`python3 -m uvicorn api:app --reload` で起動。</p>
+      </a>
+    </main>
+    <footer>
+      <p>data: <code>processes.json</code> · pipeline: <code>pipeline.py</code></p>
+    </footer>
+  </div>
+</body>
+</html>

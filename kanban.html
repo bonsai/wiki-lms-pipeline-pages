@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🗂️ Kanban — K2S Factory</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 1.5rem; }
+    nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; font-size: 0.9rem; }
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    h1 { font-size: 1.6rem; margin: 0; }
+    .subtitle { color: var(--muted); font-size: 0.9rem; margin: 0.3rem 0 0; }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      align-items: start;
+    }
+    .column {
+      background: #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+    }
+    .column h2 {
+      font-size: 1rem;
+      margin: 0 0 0.75rem;
+      padding: 0.4rem 0.6rem;
+      background: var(--card);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      padding: 0.75rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.9rem;
+    }
+    .card h3 { font-size: 0.95rem; margin: 0 0 0.4rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.4rem; }
+    .tag {
+      font-size: 0.7rem;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+    }
+    .note { color: var(--muted); font-size: 0.8rem; margin: 0.3rem 0 0; }
+    .issue { margin-top: 0.4rem; font-size: 0.75rem; }
+    .issue a { color: var(--accent); text-decoration: none; }
+    .issue a:hover { text-decoration: underline; }
+    footer { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <nav>
+        <a href="index.html">🏠 index</a>
+        <a href="mission.html">🌟 mission</a>
+        <a href="process-map.html">🗺️ map</a>
+        <a href="flow-diagram.html">🕸️ flow</a>
+      </nav>
+      <h1>🗂️ Kanban</h1>
+      <p class="subtitle">K2S Factory のタスクボード</p>
+    </header>
+
+    <main class="board" id="board"></main>
+
+    <footer>
+      <p>データ: <code>kanban.json</code></p>
+    </footer>
+  </div>
+
+  <script>
+    const KANBAN_DATA = {
+  "columns": [
+    { "id": "backlog", "name": "Backlog", "emoji": "🧊" },
+    { "id": "todo", "name": "To Do", "emoji": "📋" },
+    { "id": "doing", "name": "In Progress", "emoji": "🚧" },
+    { "id": "done", "name": "Done", "emoji": "✅" }
+  ],
+  "cards": [
+    {
+      "id": "c01",
+      "title": "LMS パイプラインの Camel pollination をオプション化",
+      "column": "todo",
+      "tags": ["pipeline", "config", "cost"],
+      "note": "seed 数制限 + フラグでタイムアウト回避"
+    },
+    {
+      "id": "c02",
+      "title": "優先ディレクトリだけを ingest する",
+      "column": "todo",
+      "tags": ["pipeline", "ingest"],
+      "note": "creative/, journal/, projects/, agents/, ontology/ のみ。raw/ personal/ は除外"
+    },
+    {
+      "id": "c03",
+      "title": "bqmlite 特徴量化と bqmlite_input.json 生成",
+      "column": "todo",
+      "tags": ["bqmlite", "features"],
+      "issue": "https://github.com/bonsai/bqmlite/issues/12"
+    },
+    {
+      "id": "c04",
+      "title": "メール通知の SMTP 設定を確定",
+      "column": "todo",
+      "tags": ["notify", "smtp"],
+      "note": "設定がなければ .eml フォールバックのまま"
+    },
+    {
+      "id": "c05",
+      "title": "Sakura embeddings / home BigQuery 統合",
+      "column": "backlog",
+      "tags": ["bqmlite", "sakura", "bigquery"],
+      "issue": "https://github.com/bonsai/bqmlite/issues/12"
+    },
+    {
+      "id": "c06",
+      "title": "t2t text-to-text 遺伝的出産プロトコル",
+      "column": "backlog",
+      "tags": ["t2t", "protocol", "weave"],
+      "issue": "https://github.com/bonsai/t2t/issues/1"
+    },
+    {
+      "id": "c07",
+      "title": "r2r repo-to-repo プロトコル",
+      "column": "backlog",
+      "tags": ["r2r", "protocol", "weave"],
+      "issue": "https://github.com/bonsai/r2r/issues/1"
+    },
+    {
+      "id": "c08",
+      "title": "創作品の最初の小バッチを生成・品質レビュー",
+      "column": "doing",
+      "tags": ["creative", "quality"],
+      "note": "tag/seed プロンプトの改善が必要"
+    },
+    {
+      "id": "c09",
+      "title": "process-map.html / flow-diagram.html / index.html 作成",
+      "column": "done",
+      "tags": ["docs", "ui"]
+    },
+    {
+      "id": "c10",
+      "title": "LMS + Sakura API 接続テスト",
+      "column": "done",
+      "tags": ["lms", "sakura", "test"]
+    },
+    {
+      "id": "c11",
+      "title": "Mermaid 構文エラーの修正",
+      "column": "done",
+      "tags": ["docs", "mermaid"]
+    }
+  ]
+};
+
+    function renderBoard(data) {
+      const board = document.getElementById('board');
+      data.columns.forEach(col => {
+        const colCards = data.cards.filter(c => c.column === col.id);
+        const colEl = document.createElement('section');
+        colEl.className = 'column';
+        colEl.innerHTML = `<h2>${col.emoji} ${col.name} <small>(${colCards.length})</small></h2>`;
+        colCards.forEach(card => {
+          const tags = card.tags.map(t => `<span class="tag">${t}</span>`).join('');
+          const note = card.note ? `<p class="note">${card.note}</p>` : '';
+          const issue = card.issue ? `<div class="issue"><a href="${card.issue}" target="_blank">${card.issue}</a></div>` : '';
+          const cardEl = document.createElement('article');
+          cardEl.className = 'card';
+          cardEl.innerHTML = `
+            <div class="tags">${tags}</div>
+            <h3>${card.title}</h3>
+            ${note}
+            ${issue}
+          `;
+          colEl.appendChild(cardEl);
+        });
+        board.appendChild(colEl);
+      });
+    }
+
+    renderBoard(KANBAN_DATA);
+  </script>
+</body>
+</html>

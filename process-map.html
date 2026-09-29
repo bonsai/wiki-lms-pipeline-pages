@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🗺️ K2S Factory Process Map</title>
+
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --border: #e5e7eb;
+      --wiki: #dcfce7;
+      --weave: #fef3c7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 2rem; }
+    nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; font-size: 0.9rem; }
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+    .subtitle { color: var(--muted); margin: 0; }
+    .legend {
+      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+      margin: 1.5rem 0; font-size: 0.9rem;
+    }
+    .legend span { background: var(--accent-light); color: var(--accent); padding: 0.25rem 0.75rem; border-radius: 9999px; }
+    .axis-legend { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+    .axis-legend span { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; }
+    .axis-wiki { background: var(--wiki); color: #166534; }
+    .axis-weave { background: var(--weave); color: #92400e; }
+
+    .repos { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+    .repo {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .repo header-repo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .repo h2 { font-size: 1.1rem; margin: 0; }
+    .repo .note { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .process {
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      padding: 0.75rem;
+      margin-bottom: 0.6rem;
+      background: #fafafa;
+    }
+    .process h3 { font-size: 0.95rem; margin: 0 0 0.4rem; }
+    .sov { font-size: 0.8rem; color: var(--muted); display: grid; gap: 0.15rem; }
+    .sov strong { color: var(--text); }
+    .output { margin-top: 0.4rem; font-size: 0.8rem; color: #166534; }
+    .issue { margin-top: 0.3rem; font-size: 0.75rem; }
+    .issue a { color: var(--accent); text-decoration: none; }
+
+
+
+    footer { text-align: center; margin-top: 2rem; font-size: 0.8rem; color: var(--muted); }
+    code { background: #f3f4f6; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <nav>
+        <a href="index.html">🏠 index</a>
+        <a href="mission.html">🌟 mission</a>
+        <a href="flow-diagram.html">🕸️ flow</a>
+        <a href="kanban.html">🗂️ kanban</a>
+      </nav>
+      <h1>🗺️ K2S Factory Process Map</h1>
+      <p class="subtitle">bonsai/wiki → 創作・分析・連携 パイプライン可視化</p>
+    </header>
+
+    <div class="legend">
+      <span><strong>S</strong> = Subject（主体／エージェント）</span>
+      <span><strong>V</strong> = Verb（動作）</span>
+      <span><strong>O</strong> = Object（対象）</span>
+    </div>
+    <div class="axis-legend">
+      <span class="axis-wiki">🌿 wiki 軸（知識・土壌）</span>
+      <span class="axis-weave">🧶 weave 軸（編む・創作・分析）</span>
+    </div>
+
+    <div id="cards" class="repos"></div>
+
+    <footer>
+      <p>データ駆動： <code>processes.json</code> を編集すれば統廃合が簡単</p>
+      <p>将来は <code>bonsai/wiki</code>（知識）と <code>bonsai/wiki-weave-skill</code>（編む）に集約予定</p>
+    </footer>
+  </div>
+
+  <script>
+    // processes.json の内容を内包（file:// でも動作）
+    const PROCESS_DATA = {
+  "title": "🗺️ K2S Factory Process Map",
+  "description": "bonsai/wiki を起点とした創作・分析・連携パイプラインの可視化。後から wiki / weave の2軸に統廃合しやすいよう、JSON データ駆動で記述。",
+  "legend": {
+    "S": "Subject（主体／エージェント）",
+    "V": "Verb（動作）",
+    "O": "Object（対象）"
+  },
+  "repos": [
+    {
+      "id": "wiki",
+      "name": "bonsai/wiki",
+      "emoji": "🌿",
+      "axis": "wiki",
+      "note": "知識の土壌。セカンドブレインとして育てられる。",
+      "processes": [
+        {
+          "id": "maintain",
+          "name": "セカンドブレインを育てる",
+          "S": "human / agent",
+          "V": "観察・記録・待つ",
+          "O": "知見・日誌・アイデア",
+          "output": "markdown corpus",
+          "issue": null
+        },
+        {
+          "id": "snapshot",
+          "name": "snapshot を取得",
+          "S": "pipeline agent",
+          "V": "tarball 展開",
+          "O": "repo contents",
+          "output": "wiki-snapshot/",
+          "issue": null
+        }
+      ]
+    },
+    {
+      "id": "pipeline",
+      "name": "wiki-lms-pipeline",
+      "emoji": "🏭",
+      "axis": "weave",
+      "note": "LMS を使ったローカル創作工場。",
+      "processes": [
+        {"id": "ingest", "name": "ingest", "S": "pipeline", "V": "読み込む", "O": "md/txt/html files", "output": "chunks"},
+        {"id": "embed", "name": "embed", "S": "pipeline", "V": "ベクトル化する", "O": "chunks", "output": "embeddings (nomic 768d)"},
+        {"id": "tag", "name": "tag", "S": "gemma-4-e4b", "V": "分類する", "O": "file", "output": "tags（値のみ）"},
+        {"id": "seed", "name": "seed pick", "S": "pipeline", "V": "採取する", "O": "interesting chunks", "output": "seeds"},
+        {"id": "pollinate", "name": "pollinate", "S": "Camel Idea ↔ Critic", "V": "交叉・批評する", "O": "seeds", "output": "hybrid ideas"},
+        {"id": "write", "name": "genre write", "S": "gemma-4-e4b", "V": "創作する", "O": "pollinated idea", "output": "draft (SF/落語/脚本/小説/企画/...)"},
+        {"id": "quality", "name": "quality gate", "S": "gemma-4-e4b", "V": "採点・再生成する", "O": "draft", "output": "score >= 3.5"},
+        {"id": "jev", "name": "jev classify", "S": "jev", "V": "振り分ける", "O": "output", "output": "agt / txt / data / tool"},
+        {"id": "export_bqmlite", "name": "export bqmlite", "S": "pipeline", "V": "特徴量化する", "O": "reviewed drafts", "output": "bqmlite_input.json"},
+        {"id": "publish", "name": "publish", "S": "pipeline", "V": "書き出す", "O": "good drafts", "output": "markdown files"},
+        {"id": "notify", "name": "notify", "S": "pipeline", "V": "通知する", "O": "report", "output": "email / .eml"}
+      ]
+    },
+    {
+      "id": "wiki-weave-skill",
+      "name": "bonsai/wiki-weave-skill",
+      "emoji": "🧶",
+      "axis": "weave",
+      "note": "opencode / pi から呼ばれる wiki 編みスキル。",
+      "processes": [
+        {"id": "weave", "name": "wiki を編む", "S": "opencode/pi skill", "V": "編む", "O": "wiki chunks", "output": "woven content"}
+      ]
+    },
+    {
+      "id": "t2t",
+      "name": "bonsai/t2t",
+      "emoji": "🧬",
+      "axis": "weave",
+      "note": "text-to-text 遺伝的出産プロトコル。",
+      "processes": [
+        {"id": "reproduce", "name": "t2t reproduce", "S": "parent texts", "V": "出産・交叉する", "O": "DNA at interface", "output": "child text", "issue": "https://github.com/bonsai/t2t/issues/1"}
+      ]
+    },
+    {
+      "id": "r2r",
+      "name": "bonsai/r2r",
+      "emoji": "🔀",
+      "axis": "weave",
+      "note": "A2A 発想の repo-to-repo プロトコル。",
+      "processes": [
+        {"id": "broker", "name": "r2r broker", "S": "repo agent", "V": "発見・依頼・返す", "O": "capability / request", "output": "artifact", "issue": "https://github.com/bonsai/r2r/issues/1"}
+      ]
+    },
+    {
+      "id": "bqmlite",
+      "name": "bonsai/bqmlite",
+      "emoji": "📊",
+      "axis": "weave",
+      "note": "ローカル ML / 回帰分析。テキストは数値化してから。",
+      "processes": [
+        {"id": "regress", "name": "linear regression", "S": "bqmlite", "V": "回帰する", "O": "numeric features", "output": "quality prediction"},
+        {"id": "sakura_embed", "name": "Sakura embed", "S": "Sakura API", "V": "ベクトル化する", "O": "text", "output": "embeddings (2560d) — あとで", "issue": "https://github.com/bonsai/bqmlite/issues/12"},
+        {"id": "bq_export", "name": "home BQ export", "S": "pipeline", "V": "出力する", "O": "features", "output": "BigQuery at home — あとで", "issue": "https://github.com/bonsai/bqmlite/issues/12"}
+      ]
+    },
+    {
+      "id": "output",
+      "name": "outputs",
+      "emoji": "🎁",
+      "axis": "weave",
+      "note": "最終成果物。",
+      "processes": [
+        {"id": "creative", "name": "creative works", "S": "genre writer", "V": "生成する", "O": "idea", "output": "絵本・4コマ・SF・落語・脚本・恋愛小説・企画書"},
+        {"id": "quiz", "name": "review quiz", "S": "agent", "V":  "出題する", "O": "knowledge chunks", "output": "復習クイズ"}
+      ]
+    }
+  ],
+  "flows": [
+    {"from": "wiki.maintain", "to": "wiki.snapshot", "label": "日々更新"},
+    {"from": "wiki.snapshot", "to": "pipeline.ingest", "label": "tarball"},
+    {"from": "pipeline.ingest", "to": "pipeline.embed", "label": "chunks"},
+    {"from": "pipeline.embed", "to": "pipeline.tag", "label": "vectors"},
+    {"from": "pipeline.tag", "to": "pipeline.seed", "label": "tags"},
+    {"from": "pipeline.seed", "to": "pipeline.pollinate", "label": "seeds"},
+    {"from": "pipeline.pollinate", "to": "pipeline.write", "label": "hybrid ideas"},
+    {"from": "pipeline.write", "to": "pipeline.quality", "label": "drafts"},
+    {"from": "pipeline.quality", "to": "pipeline.jev", "label": ">=3.5"},
+    {"from": "pipeline.jev", "to": "pipeline.publish", "label": "分類済み"},
+    {"from": "pipeline.jev", "to": "pipeline.export_bqmlite", "label": "features"},
+    {"from": "pipeline.export_bqmlite", "to": "bqmlite.regress", "label": "json"},
+    {"from": "bqmlite.sakura_embed", "to": "bqmlite.regress", "label": "2560d vec", "style": "stroke-dasharray: 5 5"},
+    {"from": "pipeline.publish", "to": "output.creative", "label": "files"},
+    {"from": "pipeline.publish", "to": "pipeline.notify", "label": "report"},
+    {"from": "wiki-weave-skill.weave", "to": "pipeline.seed", "label": "skill経由"},
+    {"from": "t2t.reproduce", "to": "pipeline.pollinate", "label": "交配ルール", "style": "stroke-dasharray: 5 5"},
+    {"from": "r2r.broker", "to": "pipeline.write", "label": "委託タスク", "style": "stroke-dasharray: 5 5"}
+  ]
+};
+
+    function renderCards(data) {
+      const container = document.getElementById('cards');
+      data.repos.forEach(repo => {
+        const el = document.createElement('div');
+        el.className = 'repo';
+        const axisClass = repo.axis === 'wiki' ? 'axis-wiki' : 'axis-weave';
+        const procs = repo.processes.map(p => `
+          <div class="process">
+            <h3>${p.name}</h3>
+            <div class="sov">
+              <div><strong>S:</strong> ${p.S}</div>
+              <div><strong>V:</strong> ${p.V}</div>
+              <div><strong>O:</strong> ${p.O}</div>
+            </div>
+            <div class="output">→ ${p.output}</div>
+            ${p.issue ? `<div class="issue"><a href="${p.issue}" target="_blank">🎫 issue</a></div>` : ''}
+          </div>
+        `).join('');
+        el.innerHTML = `
+          <div class="header-repo">
+            <span style="font-size:1.4rem">${repo.emoji}</span>
+            <h2>${repo.name}</h2>
+            <span class="${axisClass}" style="margin-left:auto;font-size:0.75rem;padding:0.15rem 0.5rem;border-radius:9999px">${repo.axis}</span>
+          </div>
+          <div class="note">${repo.note}</div>
+          ${procs}
+        `;
+        container.appendChild(el);
+      });
+    }
+    renderCards(PROCESS_DATA);
+  </script>
+</body>
+</html>

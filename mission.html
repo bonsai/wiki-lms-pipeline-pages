@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌱 K2S Factory — Pi Mission</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --border: #e5e7eb;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .mission-list {
+      display: grid;
+      gap: 1.25rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      font-size: 1.25rem;
+      margin: 0 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card p {
+      margin: 0;
+    }
+    .card ul {
+      margin: 0.75rem 0 0;
+      padding-left: 1.25rem;
+    }
+    .card li {
+      margin-bottom: 0.35rem;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      margin-right: 0.35rem;
+    }
+    .links {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+      margin: 0 0.4rem;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <nav>
+        <a href="index.html">🏠 index</a>
+        <a href="process-map.html">🗺️ map</a>
+        <a href="flow-diagram.html">🕸️ flow</a>
+        <a href="kanban.html">🗂️ kanban</a>
+      </nav>
+      <h1>🌱 K2S Factory</h1>
+      <p class="subtitle">Pi コードアシスタントとしてのミッション（3本柱）</p>
+    </header>
+
+    <section class="mission-list">
+      <article class="card">
+        <h2><span>🧠</span> 知識を創作に変換するローカル工場をつくる</h2>
+        <p>
+          <span class="badge">ingest</span>
+          <span class="badge">tag</span>
+          <span class="badge">seed</span>
+          <span class="badge">pollinate</span>
+          <span class="badge">generate</span>
+        </p>
+        <ul>
+          <li><code>bonsai/wiki</code> を tarball → チャンク → 埋め込みして LMS に食わせる</li>
+          <li>ネタごとにタグを振り、RAG 的に Seed を採取・交配（Pollination）する</li>
+          <li>絵本 / 4コマ漫画 / ショートショートSF / SF落語 / 映画脚本 / 哲学的恋愛小説 / ノベルゲーム企画「アイドルバスター」 / ラング三兄弟 / エージェント擬人化 / Camel 解説動画 などを量産</li>
+          <li>基本は <strong>LMS Gemma4 + nomic-embed-text</strong> でローカル完結、コストを最小化</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2><span>🛠️</span> ラング三兄弟 + Camel + jev + bqmlite を統合する</h2>
+        <p>
+          <span class="badge">LangGraph</span>
+          <span class="badge">Camel</span>
+          <span class="badge">jev</span>
+          <span class="badge">bqmlite</span>
+        </p>
+        <ul>
+          <li><strong>LangGraph</strong> で「ingest → embed → tag → seed → pollinate → write → quality gate → publish」の状態グラフを構築</li>
+          <li><strong>Camel</strong> で IdeaAgent ↔ CriticAgent の多エージェント相談（状態思考）を実装</li>
+          <li><strong>jev</strong> で生成物を <code>agt / txt / data / tool</code> に分類し、出力先を決める</li>
+          <li><strong>bqmlite</strong> で「どんな Seed が高品質な果実を生むか」を回帰分析。テキストは embedding → PCA で数値化</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2><span>📋</span> 長期アイデアを issue に落として、あとで拾えるようにする</h2>
+        <p>
+          <span class="badge">GitHub</span>
+          <span class="badge">issue</span>
+          <span class="badge">mail</span>
+        </p>
+        <ul>
+          <li><a href="https://github.com/bonsai/t2t/issues/1" target="_blank">t2t #1</a>：text-to-text GA 的出産プロトコル（界面での DNA 交換 / 子テキスト）</li>
+          <li><a href="https://github.com/bonsai/r2r/issues/1" target="_blank">r2r #1</a>：A2A 発想の repo-to-repo プロトコル</li>
+          <li><a href="https://github.com/bonsai/bqmlite/issues/12" target="_blank">bqmlite #12</a>：テキスト特徴量 / Sakura Embeddings / 家の BigQuery 連合</li>
+          <li>パイプライン完了時はメール通知（未設定時は <code>.eml</code> 生成）</li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="links">
+      <p>📁 作業場所：<code>/home/bons/wiki-lms-pipeline/</code></p>
+      <p>
+        <a href="https://github.com/bonsai/t2t/issues/1" target="_blank">t2t</a> /
+        <a href="https://github.com/bonsai/r2r/issues/1" target="_blank">r2r</a> /
+        <a href="https://github.com/bonsai/bqmlite/issues/12" target="_blank">bqmlite</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
